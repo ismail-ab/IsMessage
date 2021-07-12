@@ -12,9 +12,9 @@ export interface IConversation {
   messages: IMessage[];
 }
 
-export const messages: IConversation[] = [
+export const conversations: IConversation[] = [
   {
-    id: '60ec5228fffca00b859b34e5',
+    id: '1',
     picture: 'http://placehold.it/32x32',
     name: 'Wilma Hardy',
     phone: '+1 (891) 578-3053',
