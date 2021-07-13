@@ -9,7 +9,7 @@ import {
   FlatList,
 } from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {conversations, IMessage} from '../../conversations';
+import {conversations, IMessage} from '../store/conversations';
 import {RootStackParamList} from '../../App';
 import {uuidv4} from '../utils/uuidV4';
 
