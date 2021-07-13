@@ -4,8 +4,7 @@ import {ScrollView, StyleSheet, SafeAreaView} from 'react-native';
 import {IConversationProps} from './Conversation';
 import ConversationRow from './ConversationRow';
 import {IConversation} from '../store/conversations';
-import {useStoreState} from 'easy-peasy';
-import {IStore} from '../store';
+import {useStoreState} from '../store';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -13,7 +12,7 @@ export type RootStackParamList = {
 };
 
 const Home = () => {
-  const conversations: IConversation[] = useStoreState<IStore>(
+  const conversations: IConversation[] = useStoreState(
     state => state.conversations.messages,
   );
 

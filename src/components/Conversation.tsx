@@ -9,13 +9,21 @@ import {
   FlatList,
 } from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {conversations, IMessage} from '../store/conversations';
+import {IConversation} from '../store/conversations';
 import {RootStackParamList} from '../../App';
-import {uuidv4} from '../utils/uuidV4';
+import {useStoreActions, useStoreState} from '../store';
 
 export interface IConversationProps {
   recipientName: string;
   conversationId: string;
+}
+
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c == 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
 }
 
 type ConversationProps = StackScreenProps<RootStackParamList, 'Conversation'>;
@@ -23,27 +31,33 @@ type ConversationProps = StackScreenProps<RootStackParamList, 'Conversation'>;
 const Conversation: React.FC<ConversationProps> = props => {
   const flatList = useRef(null);
   const [currentMessage, setCurrentMessage] = React.useState('');
+  const conversations: IConversation[] = useStoreState(state => {
+    return state.conversations.messages;
+  });
   const conversation = conversations.find(
-    conv => (conv.id = props.route.params.conversationId),
+    conv => conv.id === props.route.params.conversationId,
   );
-  const [messages, setMessages] = React.useState<IMessage[]>(
-    conversation!.messages,
+  const addMessage = useStoreActions(
+    actions => actions.conversations.addMessage,
   );
 
   const pushMessage = () => {
-    setMessages([
-      ...messages,
-      {
+    addMessage({
+      conversationId: conversation!.id,
+      message: {
         fromRecipient: false,
         id: uuidv4(),
         message: currentMessage,
       },
-      {
+    });
+    addMessage({
+      conversationId: conversation!.id,
+      message: {
         fromRecipient: true,
         id: uuidv4(),
         message: currentMessage,
       },
-    ]);
+    });
     setCurrentMessage('');
 
     flatList.current.scrollToEnd({animated: true});
@@ -53,7 +67,7 @@ const Conversation: React.FC<ConversationProps> = props => {
     <SafeAreaView style={styles.container}>
       <FlatList
         style={styles.scrollView}
-        data={messages}
+        data={conversation!.messages}
         renderItem={({item}) => (
           <Text
             style={!item.fromRecipient ? styles.bubble : styles.answerBubble}>
