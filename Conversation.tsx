@@ -9,9 +9,11 @@ import {
   View,
   FlatList,
 } from 'react-native';
+import {StackScreenProps} from '@react-navigation/stack';
 import {conversations, IMessage} from './conversations';
+import {RootStackParamList} from './App';
 
-interface IConversation {
+export interface IConversationProps {
   conversationId: string;
 }
 
@@ -23,10 +25,14 @@ function uuidv4() {
   });
 }
 
-const Conversation: React.FC<IConversation> = ({conversationId}) => {
+type ConversationProps = StackScreenProps<RootStackParamList, 'Conversation'>;
+
+const Conversation: React.FC<ConversationProps> = props => {
   const flatList = useRef(null);
   const [currentMessage, setCurrentMessage] = React.useState('');
-  const conversation = conversations.find(conv => (conv.id = conversationId));
+  const conversation = conversations.find(
+    conv => (conv.id = props.route.params.conversationId),
+  );
   const [messages, setMessages] = React.useState<IMessage[]>(
     conversation!.messages,
   );
@@ -61,7 +67,7 @@ const Conversation: React.FC<IConversation> = ({conversationId}) => {
             {item.message}
           </Text>
         )}
-        keyExtractor={() => uuidv4()}
+        keyExtractor={item => item.id}
         ref={flatList}
       />
       <View style={styles.view}>
