@@ -1,6 +1,5 @@
 import React, {useRef} from 'react';
 import {
-  StatusBar,
   TouchableOpacity,
   SafeAreaView,
   StyleSheet,
@@ -10,19 +9,13 @@ import {
   FlatList,
 } from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {conversations, IMessage} from './conversations';
-import {RootStackParamList} from './App';
+import {conversations, IMessage} from '../../conversations';
+import {RootStackParamList} from '../../App';
+import {uuidv4} from '../utils/uuidV4';
 
 export interface IConversationProps {
+  recipientName: string;
   conversationId: string;
-}
-
-function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = (Math.random() * 16) | 0,
-      v = c == 'x' ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
 }
 
 type ConversationProps = StackScreenProps<RootStackParamList, 'Conversation'>;
@@ -90,7 +83,7 @@ const Conversation: React.FC<ConversationProps> = props => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: StatusBar.currentHeight,
+    paddingTop: 5,
   },
   scrollView: {
     flex: 1,
@@ -113,7 +106,7 @@ const styles = StyleSheet.create({
   bubble: {
     backgroundColor: 'teal',
     color: 'white',
-    borderRadius: 30,
+    borderRadius: 20,
     padding: 15,
     alignSelf: 'flex-start',
     marginBottom: 5,
@@ -122,7 +115,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#eee',
     borderColor: '#eeeee9',
     color: 'grey',
-    borderRadius: 30,
+    borderRadius: 20,
     padding: 15,
     alignSelf: 'flex-end',
     marginBottom: 5,
